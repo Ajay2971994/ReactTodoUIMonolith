@@ -1,42 +1,28 @@
 trigger: none
 
-pool: App   # Tumhara self-hosted Linux VM agent
+pool: App  # your VM agent
 
 steps:
 
-# 1️⃣ Install prerequisites + PowerShell Core
-- script: |
-    sudo apt-get update
-    sudo apt-get install -y wget apt-transport-https software-properties-common
-    wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
-    sudo dpkg -i packages-microsoft-prod.deb
-    sudo apt-get update
-    sudo apt-get install -y powershell
-  displayName: "Install PowerShell Core (pwsh)"
-
-# 2️⃣ Install Node.js + npm
+# 1. Install Node Packages
 - task: PowerShell@2
-  displayName: "Install Node.js and npm"
-  inputs:
-    targetType: 'inline'
-    script: |
-      curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-      sudo apt-get install -y nodejs
-      node -v
-      npm -v
-
-# 3️⃣ Install Node Packages
-- task: PowerShell@2
-  displayName: "Install Node Packages (npm install)"
+  displayName: "Install Node Packages"
   inputs:
     targetType: 'inline'
     script: |
       npm install
 
-# 4️⃣ Build Project
+# 2. Build Project
 - task: PowerShell@2
-  displayName: "Build Project (npm run build)"
+  displayName: "Build Project"
   inputs:
     targetType: 'inline'
     script: |
       npm run build
+
+# 3. Publish Build Artifact
+- task: PublishBuildArtifacts@1
+  displayName: "Publish Artifact"
+  inputs:
+    PathtoPublish: 'dist'
+    ArtifactName: 'drop'
