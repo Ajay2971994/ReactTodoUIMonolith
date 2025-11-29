@@ -1,8 +1,16 @@
-trigger: none 
-pool: Default
+trigger: none
 
-steps: 
+pool: App
+
+steps:
 - task: PowerShell@2
+  displayname: NPM install
   inputs:
     targetType: 'inline'
-    script: 'Write-Host "Hello World"'
+    script: 'npm install'
+
+- task: PowerShell@2
+  displayname: NPM build
+  inputs:
+    targetType: 'inline'
+    script: 'npm run build'
