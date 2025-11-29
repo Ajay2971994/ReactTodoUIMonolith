@@ -3,11 +3,15 @@ trigger: none
 pool: App   # tumhara self-hosted pool
 
 steps:
+- script: |
+    sudo apt-get update
+    sudo apt-get install -y powershell
+  displayName: "Install PowerShell Core (pwsh)"
+
 - task: PowerShell@2
   displayName: 'Install Node Packages (npm install)'
   inputs:
     targetType: 'inline'
-    pwsh: false     # 👈 ye important! pwsh error hat jayega
     script: |
       npm install
 
@@ -15,6 +19,6 @@ steps:
   displayName: 'Build Project (npm run build)'
   inputs:
     targetType: 'inline'
-    pwsh: false     # 👈 pwsh ke badle Windows PowerShell use karega
     script: |
       npm run build
+
