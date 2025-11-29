@@ -4,13 +4,13 @@ pool: App
 
 steps:
 - task: PowerShell@2
-  displayname: NPM install
+  # displayname: 'NPM install'
   inputs:
     targetType: 'inline'
     script: 'npm install'
 
 - task: PowerShell@2
-  displayname: NPM build
+  # displayname: 'NPM Build'
   inputs:
     targetType: 'inline'
     script: 'npm run build'
