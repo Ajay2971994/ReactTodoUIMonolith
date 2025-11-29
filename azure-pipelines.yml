@@ -1,16 +1,20 @@
 trigger: none
 
-pool: App
+pool: App   # tumhara self-hosted pool
 
 steps:
 - task: PowerShell@2
-  # displayname: 'NPM install'
+  displayName: 'Install Node Packages (npm install)'
   inputs:
     targetType: 'inline'
-    script: 'npm install'
+    pwsh: false     # 👈 ye important! pwsh error hat jayega
+    script: |
+      npm install
 
 - task: PowerShell@2
-  # displayname: 'NPM Build'
+  displayName: 'Build Project (npm run build)'
   inputs:
     targetType: 'inline'
-    script: 'npm run build'
+    pwsh: false     # 👈 pwsh ke badle Windows PowerShell use karega
+    script: |
+      npm run build
