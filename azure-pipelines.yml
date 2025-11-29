@@ -20,9 +20,3 @@ steps:
     script: |
       npm run build
 
-# 3. Publish Build Artifact
-- task: PublishBuildArtifacts@1
-  displayName: "Publish Artifact"
-  inputs:
-    PathtoPublish: 'dist'
-    ArtifactName: 'drop'
