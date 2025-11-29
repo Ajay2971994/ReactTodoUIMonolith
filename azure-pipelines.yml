@@ -1,10 +1,10 @@
 trigger: none
 
-pool: App  # your VM agent
+pool: App   # your self-hosted VM agent
 
 steps:
 
-# 1. Install Node Packages
+# 1. npm install
 - task: PowerShell@2
   displayName: "Install Node Packages"
   inputs:
@@ -12,7 +12,7 @@ steps:
     script: |
       npm install
 
-# 2. Build Project
+# 2. npm build
 - task: PowerShell@2
   displayName: "Build Project"
   inputs:
@@ -20,3 +20,28 @@ steps:
     script: |
       npm run build
 
+# 3. Zip
+- task: PowerShell@2
+  displayName: "Zip Build Folder"
+  inputs:
+    targetType: 'inline'
+    script: |
+      Compress-Archive -Path "dist/*" -DestinationPath "build.zip" -Force
+
+# 4. Install AzCopy (if not installed on VM)
+- task: PowerShell@2
+  displayName: "Install AzCopy"
+  inputs:
+    targetType: 'inline'
+    script: |
+      Invoke-WebRequest -Uri "https://azcopyvnext.azureedge.net/release20240620/azcopy_linux_amd64_10.25.0.tar.gz" -OutFile "azcopy.tar.gz"
+      tar -xf azcopy.tar.gz
+      sudo mv azcopy_linux_amd64_*/azcopy /usr/bin/
+
+# 5. Upload ZIP to Storage Container
+- task: PowerShell@2
+  displayName: "Upload ZIP to Storage Container"
+  inputs:
+    targetType: 'inline'
+    script: |
+      azcopy copy "build.zip" "https://finalwar321.blob.core.windows.net/lallilal?$(sv=2024-11-04&ss=bfqt&srt=sc&sp=rwdlacupiytfx&se=2025-12-01T16:50:48Z&st=2025-11-29T08:35:48Z&spr=https&sig=z0TBuEzwRpZtiPxYKoF%2BAl%2Fl1GTTpbsfQyuNDb5lwsg%3D)"
