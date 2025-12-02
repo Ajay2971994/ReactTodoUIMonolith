@@ -30,17 +30,8 @@ steps:
     archiveFile: '$(System.DefaultWorkingDirectory)/build.zip'
     replaceExistingArchive: true
 
-# 4. Upload ZIP to Azure Storage Container
-- task: AzureCLI@2
-  displayName: "Upload ZIP to Azure Storage"
+- task: PublishPipelineArtifact@1
   inputs:
-    azureSubscription: 'deploy'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      az storage blob upload \
-        --account-name lalli221 \
-        --container-name lalli \
-        --name build.zip \
-        --file "$(System.DefaultWorkingDirectory)/build.zip" \
-        --auth-mode login
+    targetPath: '$(System.DefaultWorkingDirectory)/build.zip'
+    artifact: 'todoui'
+    publishLocation: 'pipeline'
