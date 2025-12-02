@@ -33,7 +33,7 @@ steps:
 - task: AzureCLI@2
   displayName: "Upload ZIP to Azure Storage"
   inputs:
-    azureSubscription: 'day2'
+    azureSubscription: 'deploy'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
