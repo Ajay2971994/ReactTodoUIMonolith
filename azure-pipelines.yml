@@ -1,6 +1,6 @@
 trigger: none
 
-pool: App2   # your self-hosted VM agent
+pool: App2   # self-hosted agent
 
 steps:
 
@@ -19,6 +19,8 @@ steps:
     targetType: 'inline'
     script: |
       npm run build
+
+# 3. Create ZIP
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build'
@@ -27,5 +29,17 @@ steps:
     archiveFile: '$(System.DefaultWorkingDirectory)/build.zip'
     replaceExistingArchive: true
 
-
-
+# 4. Upload ZIP to Azure Storage Container
+- task: AzureCLI@2
+  displayName: "Upload ZIP to Azure Storage"
+  inputs:
+    azureSubscription: 'day2'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az storage blob upload \
+        --account-name lalli221 \
+        --container-name lalli \
+        --name build.zip \
+        --file "$(System.DefaultWorkingDirectory)/build.zip" \
+        --auth-mode login
